@@ -1,0 +1,16 @@
+{
+  "id": "2650169",
+  "name": "test",
+  "font_family": "iconfont",
+  "css_prefix_text": "el-icon-more",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5196162",
+      "name": "iconfont_橡皮擦",
+      "font_class": "iconfont_xiangpica",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    }
+  ]
+}
