@@ -40,16 +40,19 @@ class DrawCanvas {
     this.penColor = newColor;
     this.ctx.strokeStyle = this.penColor;
     this.ctx.fillStyle = this.penColor;
+    this.wsSetOrder('pen-color:' + newColor);
   }
 
   // change the width of stroke
   changeLineWidth(newWidth) {
     this.ctx.lineWidth = newWidth;
     this.lineWidth = newWidth;
+    this.wsSetOrder('pen-width:' + newWidth);
   }
   changeEraserWidth(newWidth) {
     this.ctx.lineWidth = newWidth;
     this.eraserWidth = newWidth;
+    this.wsSetOrder('eraser-width:' + newWidth);
   }
   clearCanvas(){
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -122,10 +125,12 @@ class DrawCanvas {
   pen() {
     this.ctx.strokeStyle = this.penColor;
     this.ctx.lineWidth = this.lineWidth;
+    this.wsSetOrder('pen');
   }
   eraser() {
     this.ctx.strokeStyle = 'white';
     this.ctx.eraserWidth = this.eraserWidth;
+    this.wsSetOrder('eraser');
   }
   clear() {
     this.clearCanvas();
@@ -169,6 +174,8 @@ class DrawCanvas {
     console.log('getOrder:', order);
     if (!this.isActive) {
       console.log('not active now');
+      var index;
+      var width;
       switch (order) {
       case 'init':
         this.saveImage();
@@ -185,15 +192,34 @@ class DrawCanvas {
       case 'redo':
         this.redo();
         break;
+      case 'pen':
+        this.pen();
+        break;
+      case 'eraser':
+        this.eraser();
+        break;
+      case (order.match(/^pen-color:/) || {}).input:
+        index = order.indexOf(":");
+        var color = order.substring(index+1, order.length);
+        this.changeColor(color);
+        break;
+      case (order.match(/^pen-width:/) || {}).input:
+        index = order.indexOf(":");
+        width = order.substring(index+1,order.length);
+        this.changeLineWidth(width);
+        break;
+      case (order.match(/^eraser-width:/) || {}).input:
+        index = order.indexOf(":");
+        width = order.substring(index+1,order.length);
+        this.changeEraserWidth(width);
+        break;
       default:
         break;
       }
     }
   }
   wsSetOrder(order) {
-    console.log('setOrder:', order);
     if (this.isActive) {
-      console.log('active now');
       this.wsDraw(order, true);
     }
     
