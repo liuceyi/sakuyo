@@ -62,17 +62,26 @@ export default {
     // check if the user is empty
     var checkUser = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('手机号或者邮箱不能为空'))
+        callback(new Error('手机号或者邮箱不能为空'));
       } 
       else {
         const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
         // eslint-disable-next-line no-useless-escape
         const reg2 = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
         if ((reg.test(value) || reg2.test(value))) {
-          callback()
+          var isExist = false;
+          this.IsAccountExist(value).then((result) => {
+            isExist = result;
+            if (isExist) {
+              callback(new Error('账号已存在'));
+            }
+            else {
+              callback();
+            }
+          });
         }
         else {
-          callback(new Error('请输入正确的手机号或者邮箱'))
+          callback(new Error('请输入正确的手机号或者邮箱'));
         }
       } 
     }   
@@ -111,9 +120,22 @@ export default {
   },
   methods: {
     SubmitForm(formName) {
+      var that = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          var data = {flag:'register', account:that.registerForm.user, password:that.registerForm.psw};
+          that.axios
+            .post(that.api, that.qs.stringify(data))
+            .then((response) => {
+              if (response.data.status == 'Success') {
+                that.$emit('register-error', false);
+                that.SwitchToLogin();
+              }
+              else {
+                that.$emit('register-error', true);
+              }
+              console.log(response);
+            })
         } 
         else {
           console.log('error submit!!');
@@ -125,7 +147,25 @@ export default {
       this.$refs[formName].resetFields();
     },
     SwitchToLogin() {
-      this.$emit('update:isRegistered', true)
+      this.$emit('update:isRegistered', true);
+    },
+    async IsAccountExist(account) {
+      var data = {flag:'account-exist', account:account};
+      var result;
+      await this.axios
+        .post(this.api, this.qs.stringify(data))
+        .then((response) => {
+          console.log(response);
+          if (response.data.status == 'Success') {
+            // Account exists
+            result = true;
+          }
+          else {
+            // Doesn't exist
+            result = false;
+          }
+        });
+      return result;
     }
   }
 }

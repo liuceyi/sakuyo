@@ -16,35 +16,35 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-menu
-              default-active="/"
+              :default-active="defaultActive"
               mode="horizontal"
               @select="HandleSelect"
               background-color="transparent"
               text-color="#fff"
               active-text-color="#ffd04b"
               router
-              unique-opened
-            >
+              unique-opened>
               <el-menu-item index="/">首页</el-menu-item>
-              <el-menu-item index="msg">消息</el-menu-item>
-              <el-menu-item index="user" v-show="isLogin">个人中心</el-menu-item>
+              <el-menu-item index="/msg">消息</el-menu-item>
+              <el-menu-item index="/user" v-show="isLogin">个人中心</el-menu-item>
             </el-menu>
           </div>
         </el-col>
         <el-col :span="3" :offset="8">
           <div class="header-user">
+            
             <button v-if="!isLogin" @click="ClickLogin" class="login-button">注册/登录</button>
+
             <el-dropdown v-if="isLogin" trigger="click">
-              
               <span class="el-dropdown-link user-span">
-                <img :src="userAvatarUrl" class="user-avatar" />
-                <span class="user-span">{{userName}}</span>
+                <el-avatar icon="el-icon-user-solid" :src="userInfo.avatar" fit="cover" class="user-avatar" />
+                <span class="user-span">{{userInfo.nickname}}</span>
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
                     <router-link to="/user" style="text-decoration:blink;"><el-dropdown-item>个人中心</el-dropdown-item></router-link>
-                    <el-dropdown-item @click="Logout">登出</el-dropdown-item>
+                    <el-dropdown-item @click="ClickLogout">登出</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -59,24 +59,28 @@
     </el-header>
 
   </el-container>
-  <Login v-model="toLogin"></Login>
+  <Login v-model="toLogin" @login-status="GetLoginStatus"></Login>
 </template>
 <script>
   import Login from '@/components/NavBar/Login/Login.vue'
   export default{
     props: {
-      menuStatus:Boolean
+      menuStatus:Boolean,
+      isLogin:Boolean,
+      userInfo:Object
     },
+    emits:["update:menuStatus", "change-login"],
     components: {
       Login
     },
     data(){
       return{
-        userName:'Sakuyo',
-        userAvatarUrl:'https://sakuyo.cn/wordpress/wp-content/uploads/2020/07/QQ%E5%9B%BE%E7%89%8720200321144938.jpg',
-        isLogin:true,
-        toLogin:false
+        toLogin: false,
+        defaultActive: '/'
       }
+    },
+    created() {
+      this.SetCurrentRoute();
     },
     methods:{
       ClickMenu(){
@@ -84,13 +88,25 @@
         this.$emit("update:menuStatus", !this.menuStatus)
       },
       ClickLogin(){
-        this.toLogin = true
+        this.toLogin = true;
       },
-      Logout() {
-        this.isLogin = false
+      ClickLogout() {
+        this.$emit("change-login", false);
       },
       HandleSelect(key, keyPath){
         console.log(key, keyPath);
+      },
+      GetLoginStatus(val) {
+        this.$emit("change-login", val);
+        this.toLogin = false;
+      },
+      SetCurrentRoute() {
+        this.defaultActive = this.$route.path;
+      }
+    },
+    watch: {
+      $route() {
+        this.SetCurrentRoute();
       }
     }
   }
@@ -167,7 +183,7 @@
     height: 2.5rem;
     border-radius: 1.25rem;
     background-color: white;
-    border: 0.15rem solid white;
+    border: 2px solid white;
   }
   .user-span {
     color: white;

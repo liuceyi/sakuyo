@@ -1,7 +1,9 @@
 <template>
+  <button @click="SayReady">ready</button>
+  <span>{{word}}</span>
   <el-row :gutter="10" type="flex" class="main-container">
     <!-- 工具栏容器 宽度为2/24*100% -->
-    <el-col :span="2" id="p5ToolBar">
+    <el-col :span="2" id="p5ToolBar" v-if="isActive&&isStart">
       <!-- 子组件 工具栏 -->
       <DrawToolBar 
         :penColor="penColor" 
@@ -19,31 +21,52 @@
       </DrawToolBar>
     </el-col>
     <!-- 画布容器 宽度为20/24*100% -->
-    <el-col :span="18" class="canvas-container" id="canvas-container">
-      <!-- 画布本体 宽高自适应 -->
-      <canvas id="draw-canvas" :width="cvWidth" :height="cvHeight"></canvas>
+    <el-col :span="18" class="draw-canvas-container">
+      <DrawCanvas
+        :isStart="isStart"
+        :userList="userList"
+        :cvWidth="cvWidth"
+        :cvHeight="cvHeight"
+        :roomId="roomId"
+        @game-start="GameStart"
+        @create-room="CreateRoom"
+        @join-room="JoinRoom"
+        v-loading="isLoading"></DrawCanvas>
     </el-col>
-    <el-col :span="3" class="userlist-container">
-      <DrawUserList :userList="userList" :drawingUser="drawingUser"></DrawUserList>
+    <el-col :span="3" class="userlist-container" v-if="isStart">
+      <DrawUserList :userList="gameObj.players" :drawingUser="gameObj.active"></DrawUserList>
     </el-col>
-    <div class="chat-container"><DrawChatBox></DrawChatBox></div>
+    <div class="chat-container">
+      <DrawChatBox :chatMsgs="chatMsgs" @send-msg="SendMsg"></DrawChatBox>
+    </div>
   </el-row>
   
 </template>
   
 <script>
-  import DrawCanvas from '@/js/draw-something.js'
+  import DrawWs from '@/js/draw-ws.js'
+  import DrawCanvasJs from '@/js/draw-something.js'
+  import DrawCanvas from '@/components/DrawSomething/DrawCanvas.vue'
   import DrawToolBar from '@/components/DrawSomething/DrawToolBar.vue'
   import DrawUserList from '@/components/DrawSomething/DrawUserList.vue'
   import DrawChatBox from '@/components/DrawSomething/DrawChatBox.vue'
   let dc; // Assign dc for drawing canvas
+  let ws;
   export default {
     name:'DrawSomething',
+    emits:['game-start', 'create-room', 'join-room'],
     components: {
       DrawToolBar,
       DrawUserList,
-      DrawChatBox
+      DrawChatBox,
+      DrawCanvas
     },
+    provide() {
+      return {
+        JoinRoom: this.JoinRoom
+      }
+    },
+    inject: ['Reload'],
     data() {
       return {
         cvWidth: 1000,
@@ -52,25 +75,48 @@
         lineWidth: 10,
         eraserWidth: 30,
         isPen: true,
-        userList: [
-          {
-            'avatarUrl':'https://sakuyo.cn/wordpress/wp-content/uploads/2020/07/QQ%E5%9B%BE%E7%89%8720200321144938.jpg', 
-            'name':'sakuyo'
-          },
-          {
-            'avatarUrl':'https://sakuyo.cn/wordpress/wp-content/uploads/2020/07/QQ%E5%9B%BE%E7%89%8720200321144938.jpg', 
-            'name':'sakuya'
-          }
-        ],
-        drawingUser:0
+        userList: [],
+        roomId: 0,
+        chatMsgs: [],
+        isActive: false,
+        isStart: false,
+        uid: sessionStorage.getItem('uid'),
+        isLoading: false,
+        gameObj: {
+          players: [],
+          round: 0,
+          active: -1
+        },
+        word:''
       }
     },
-    mounted(){
-      this.cvWidth = document.getElementById("canvas-container").offsetWidth - 10;
-      this.cvHeight = document.getElementById("canvas-container").offsetHeight - 2;
-      dc = new DrawCanvas('draw-canvas', '111'); // Bind the element and websocket
-      dc.assign();
-
+    mounted() {
+      this.isLoading = true;
+      var that = this;
+      var cookie = this.cookie.GetCookie();
+      ws = new DrawWs('www.sakuyo.cn', '9998', cookie);
+      ws.ws.handleMsg = this.HandleChat;
+      ws.ws.handleUserList = this.HandleUserList;
+      ws.ws.handleRoomId = this.HandleRoomId;
+      ws.ws.handleDraw = this.HandleDraw;
+      ws.ws.handleGame = this.HandleGame;
+      ws.ws.reload = this.Reload;
+      ws.start().then(()=>{
+        setTimeout(()=>{
+          console.log('roomId:'+that.roomId);
+          if (that.roomId == 0) {
+            that.$router.push('/draw-something');
+          }
+          else {
+            that.$router.push('/draw-something/room');
+          }
+          ws.askUserList(that.roomId);
+          that.isLoading = false;
+        }, 1500);
+        
+      })
+      
+      
     },
     methods: {
       ClearCanvas() {
@@ -94,6 +140,93 @@
       },
       Redo() {
         dc.redo();
+      },
+      SendMsg(val) {
+        if (this.isStart) {
+          ws.GameOrder(this.uid, 'check', val);
+          console.log('game-send', val);
+        }
+        else {
+          ws.sendMsg(val);
+        }
+        
+      },
+      HandleChat(newVal) {
+        this.chatMsgs.push(newVal);
+      },
+      HandleDraw(content) {
+        if (content['type']=='path') {
+          if (content['status']) {
+            dc.wsGetPath(content['content']);
+          }
+          else {
+            dc.wsPathStop();
+          }
+        }
+        else {
+          dc.wsGetOrder(content['content']);
+        }
+      },
+      HandleUserList(newVal) {
+        this.userList = newVal;
+      },
+      HandleRoomId(newVal) {
+        this.roomId = newVal['room-id'];
+        this.isStart = newVal['status'];    
+      },
+      HandleGame(data) {
+        switch(data['tag']) {
+          case 'room':
+            var newRoomId = data['content'];
+            this.roomId = newRoomId;
+            break;
+          case 'game':
+            var gameObj = data['content'];
+            this.gameObj = gameObj;
+            this.isStart = true;
+            break;
+          case 'word':
+            this.word = data['content'];
+            break;
+          case 'check':
+            //this.GetScore();
+            break;
+          case 'ready':
+            this.isActive = false;
+            break;
+          case 'end':
+            this.GameEnd();
+            break;
+        }
+      },
+      GameStart() {
+        ws.GameOrder(this.uid, 'start', this.roomId);
+      },
+      GameEnd() {
+        this.isStart = false;
+        this.$router.push('/draw-something/result');
+      },
+      // First start or reconnect
+      ActivateCanvas() {
+        this.cvWidth = document.getElementById("canvas-container").offsetWidth - 10;
+        this.cvHeight = document.getElementById("canvas-container").offsetHeight - 2;
+        dc = new DrawCanvasJs('draw-canvas'); // Bind the element
+        dc.wsDraw = function(content, isOrder=true, pathing=true){
+          ws.sendDraw(content, isOrder, pathing);
+        }
+      },
+      CreateRoom() {
+        ws.GameOrder(this.uid, 'create');
+      },
+      JoinRoom(newRoomId) {
+        ws.GameOrder(this.uid, 'join', newRoomId);
+      },
+      SayReady() {
+        ws.GameOrder(this.uid, 'ready');
+        dc.reset();
+      },
+      TryAnswer() {
+        ws.GameOrder(this.uid, 'check', '123');
       }
     },
     watch: {
@@ -104,7 +237,51 @@
         else {
           dc.eraser();
         }
+      },
+      isActive(newVal) {
+        dc.isActive = newVal;
+        if (newVal) {
+          dc.assign();
+          ws.GameOrder(this.uid, 'word');
+          console.log('ask word...');
+        }
+        else {
+          dc.cancel();
+          this.word = '';
+        }
+      },
+      roomId(newVal) {
+        if (newVal == 0) {
+          this.$router.push('/draw-something');
+        }
+        else {
+          this.$router.push('/draw-something/room');
+          console.log('roomId'+newVal);
+          ws.askUserList(newVal);
+        }
+      },
+      'gameObj.active'(newVal) {
+        if (newVal > -1) {
+          if (this.gameObj.players[newVal]['uid'] == this.uid) {
+            this.isActive = true;
+          }
+          else {
+            this.isActive = false;
+          }
+        }
+        else {
+          this.isActive = false;
+        }
+        
+      },
+      isStart(newVal) {
+        if (newVal) {
+          ws.GameOrder(this.uid, 'game', this.roomId);
+          this.ActivateCanvas();
+        }
       }
+    },
+    computed: {
     }
   }
 </script>
@@ -128,25 +305,19 @@
     box-shadow: 0 5px 15px -5px rgba(0,0,0,.5);
   }
 
-  .canvas-container {
-    width: 80%;
-    height: 80%;
-    border-radius: 5px;
-    border: 1px solid #919191;
-  }
-
-  #draw-canvas {
-    width: 100%;
-    height: 100%;
-    /*cursor:url("../assets/cursor.png"),auto;*/
-  }
-
   .main-container {
     height: 35rem;
     display: flex;
     justify-content: center;
   }
 
+  .draw-canvas-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
   .userlist-container {
     height: 80%;

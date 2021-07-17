@@ -1,7 +1,7 @@
 <template>
   <transition name='aside'>
   <el-aside width="180px" style="background-color: rgb(238, 241, 246)" v-show="asideStatus">
-    <el-menu router unique-opened active-text-color='white'>
+    <el-menu router unique-opened active-text-color='white' v-show="isLogin">
       <el-menu-item v-for="item in navList" :key="item.index" :index="item.url" class="aside-el-menu-item">
         <template #title>{{item.title}}</template><span></span><span></span><span></span><span></span>
       </el-menu-item>
@@ -12,7 +12,8 @@
 <script>
   export default{
     props: {
-      asideStatus:Boolean
+      asideStatus:Boolean,
+      isLogin:Boolean
     },
     data(){
       return{

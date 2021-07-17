@@ -5,16 +5,15 @@
     ref="loginForm"
     label-width="100px"
     class="login-form"
-    :hide-required-asterisk="true"
-  >
+    :hide-required-asterisk="true">
     <el-form-item prop="user">
       <template #label><i class="el-icon-user-solid" style="color: white;"></i></template>
       <el-input
         type="text"
         placeholder="请输入手机号或者邮箱"
         required="required"
-        v-model="loginForm.user"
-      ></el-input>
+        v-model="loginForm.user">
+      </el-input>
     </el-form-item>
     <el-form-item prop="psw">
       <template #label><i class="el-icon-key" style="color: white;"></i></template>
@@ -23,8 +22,8 @@
         placeholder="请输入密码"
         v-model="loginForm.psw"
         @keyup.enter="SubmitForm('loginForm')"
-        show-password
-      ></el-input>
+        show-password>
+      </el-input>
     </el-form-item>
   </el-form>      
   <el-row type="flex" justify="center" align="middle">
@@ -48,6 +47,7 @@ export default {
   props: {
     isRegistered:Boolean
   },
+  emits:['login-error', 'login-status'],
   data() {
     // check if the user is empty
     var checkUser = (rule, value, callback) => {
@@ -83,17 +83,34 @@ export default {
       rules: {
         user: [{ required: true, validator: checkUser, trigger: 'blur' }],
         psw: [{ required: true, validator: checkPsw, trigger: 'blur' }]
-      }
+      },
+      errorPsw: true
     }
   },
   methods: {
     SubmitForm(formName) {
+      var that = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          var data = {flag:'login', account:that.loginForm.user, password:that.loginForm.psw};
+          that.axios
+            .post(that.api, that.qs.stringify(data))
+            .then((response) => {
+              if (response.data.status == 'Success') {
+                // login info (cookie)
+                that.cookie.SetCookie(response.data.content);
+                that.$emit('login-error', false);
+                that.$emit('login-status', true);
+                
+              }
+              else {
+                that.$emit('login-error', true);
+              }
+              console.log(response)
+            })
         } 
         else {
-          console.log('error submit!!');
+          console.log('Refused error submit');
           return false;
         }
       });
@@ -102,8 +119,10 @@ export default {
       this.$refs[formName].resetFields();
     },
     SwitchToReg() {
-      this.$emit('update:isRegistered', false)
+      this.$emit('update:isRegistered', false);
+      this.$emit('login-error', false);
     }
+
   }
 }
 </script>
@@ -201,5 +220,8 @@ export default {
   .login-span>span:hover {
     opacity: 0.8;
     text-decoration: underline;
+  }
+  .error-msgbox {
+    position: absolute;
   }
 </style>

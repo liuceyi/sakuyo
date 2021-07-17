@@ -8,21 +8,36 @@ const routes = [
     name: 'Home',
     component: Home,
     children:[
-      { path: '/', component: IndexPage},
-      { path: '/msg', component:() => import('@/views/MsgPage.vue')},
-      { path: '/user', component:() => import('@/views/UserPage.vue')},
-      { path: '/sakuyo-fantasy', component:() => import('@/views/SakuyoFantasy.vue')},
-      { path: '/draw-something', component: () => import('@/views/DrawSomething.vue')}
+      { path: '/', component: IndexPage, meta:{title:"sakuyo - 首页"}},
+      { path: '/msg', component:() => import('@/views/MsgPage.vue'), meta:{title:"sakuyo - 消息"}},
+      { path: '/user', component:() => import('@/views/UserPage.vue'), meta:{title:"sakuyo - 个人中心"}},
+      { path: '/sakuyo-fantasy', component:() => import('@/views/SakuyoFantasy.vue'), meta:{title:"sakuyo - 幻想"}},
+      { 
+        path: '/draw-something', component:() => import('@/views/DrawSomething.vue'), meta:{title:"sakuyo - 你画我猜"},
+        children:[
+          { path: '/draw-something/', component:() => import('@/components/DrawSomething/DrawIndex.vue'), meta:{title:"sakuyo - 你画我猜"}},
+          { path: '/draw-something/room', component:() => import('@/components/DrawSomething/DrawRoom.vue'), meta:{title:"sakuyo - 你画我猜：房间"}},
+          { path: '/draw-something/result', component:() => import('@/components/DrawSomething/DrawResult.vue'), meta:{title:"sakuyo - 你画我猜"}}
+        ]
+      }
     ],
   }
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+});
+
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
 })
 
-export default router
+export default router;
 
 // routers of admin (only approached by admins)
 

@@ -1,13 +1,14 @@
 <template>
-  <div class="user-list-title-container"><span class="user-list-title-content">玩家列表</span></div>
+  <div class="user-list-title"><span class="user-list-title__content">玩家列表</span></div>
   <el-row v-for="(user, index) in userList" :key="index" class="user-container" type="flex">
-    <el-col :span="4">
-      <div class="drawing-user-span" v-show="index == drawingUser"></div>
+    <el-col :span="4" class="drawing-user">
+      <div class="drawing-user__span" v-show="index == drawingUser"></div>
     </el-col>
-    <el-col :span="20" class="user-content-container">
-      <el-avatar :src="user.avatarUrl" class="user-avatar"/>
-      <span class="user-name">{{user.name}}</span>
+    <el-col :span="20" class="user-content">
+      <el-avatar :src="user.avatar" icon="el-icon-user-solid" class="user-content__avatar"/>
+      <span class="user-content__name">{{user.nickname}}</span>
     </el-col>
+    {{user.score}}
   </el-row>
 
 </template>
@@ -17,26 +18,11 @@
     props: {
       userList:Array,
       drawingUser:Number
-    },
-    data() {
-      return {
-        
-        
-      }
-    },
-    mounted() {
-      
-    },
-    methods: {
-      
-    },
-    watch: {
-
     }
   }
 </script>
 <style scoped>
-  .user-list-title-container {
+  .user-list-title {
     border-bottom: 1px solid #DCDCDC;
     width: 100%;
     height: 1.5rem;
@@ -44,7 +30,7 @@
     justify-content: center;
     align-items: center;
   }
-  .user-list-title-content {
+  .user-list-title__content {
     font-size: 14px;
 
   }
@@ -54,25 +40,30 @@
     justify-content: center;
     align-items: center;
   }
-  .drawing-user-span {
+  .drawing-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .drawing-user__span {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     margin-right: 5px;
     background-image: linear-gradient(to top right, #ff9966, #ff5e62);
   }
-  .user-content-container {
+  .user-content {
     display: flex;
     align-items: center;
     justify-content: flex-start;
   }
-  .user-avatar {
+  .user-content__avatar {
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
     margin-right: 3px;
   }
-  .user-name {
-
+  .user-content__name {
+    cursor: default;
   }
 </style>

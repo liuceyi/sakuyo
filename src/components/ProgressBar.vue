@@ -1,5 +1,5 @@
 <template>
-  <el-progress type="line" :percentage="progress" :stroke-width=8>
+  <el-progress type="line" :percentage="progress" :stroke-width=8 :show-text=false>
   </el-progress>
 </template>
 

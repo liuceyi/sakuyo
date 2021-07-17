@@ -2,17 +2,30 @@
   <el-dialog
     :model-value="toLogin"
     @close="CloseDialog"
-    width="30%"
-  >
+    width="30%" 
+    class="dialog-container">
     <template #title><span style="color: white; font-size: 16px;">{{isRegistered?'登录':'注册'}}</span></template>
 
-    <LoginCard v-if="isRegistered" v-model:isRegistered="isRegistered"></LoginCard>
+    <LoginCard 
+      v-if="isRegistered"
+      v-model:isRegistered="isRegistered" 
+      @login-error="GetLoginError"
+      @login-status="GetLoginStatus"></LoginCard>
 
-    <RegisterCard v-if="!isRegistered" v-model:isRegistered="isRegistered"></RegisterCard>
+    <RegisterCard v-if="!isRegistered" v-model:isRegistered="isRegistered" @register-error="GetRegisterError"></RegisterCard>
 
 
-    
+    <el-alert
+      :title="errorMsg"
+      type="error"
+      center
+      show-icon
+      :closable="false"
+      v-show="showError"
+      class="error-msgbox" />
   </el-dialog>
+
+
 </template>
 
 <script>
@@ -27,15 +40,24 @@ export default {
     LoginCard,
     RegisterCard
   },
-  emits: ['update:toLogin'],
+  emits: ['update:toLogin', 'login-status'],
   data(){
     return{
-      isRegistered:true
+      isRegistered: true,
+      showError: false,
+      errorMsg: '账号密码错误'
     }
   },
   methods: {
     CloseDialog(){
-      this.$emit('update:toLogin', false)
+      this.$emit('update:toLogin', false);
+    },
+    GetLoginError(val) {
+      this.showError = val;
+      this.errorMsg = "账号密码错误";
+    },
+    GetLoginStatus(val) {
+      this.$emit('login-status', val);
     }
   }
 }
@@ -57,6 +79,14 @@ export default {
     display: flex;
     justify-content: center;
   }
-
+  .dialog-container {
+    position: relative;
+  }
+  .error-msgbox {
+    position: absolute;
+    bottom: -50px;
+    left: 20%;
+    width: 60%;
+  }
   
 </style>

@@ -35,49 +35,32 @@
 <script>
   export default {
     name:'DrawChatBox',
+    props:{
+      chatMsgs:Array
+    },
+    emits: ['send-msg'],
     data() {
       return {
-        chatMsgs:[],
+        userInfo:{
+          uid:sessionStorage.getItem('uid'),
+          nickname:sessionStorage.getItem('nickname'),
+          avatar:sessionStorage.getItem('avatar')
+        },
         text:''
-        
       }
-    },
-    mounted() {
-      this.chatMsgs = [
-        {
-          nickname:'sakuyo',
-          avatar:'',
-          content:'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
-          time:'2021-07-08 11:39:06',
-          me:false
-        },
-        {
-          nickname:'sakuta',
-          avatar:'',
-          content:'xs',
-          time:'2021-07-08 12:39:06',
-          me:true
-        },
-        {
-          nickname:'mihoko',
-          avatar:'',
-          content:'!!',
-          time:'2021-07-08 10:39:06',
-          me:false
-        }
-      ]
     },
     methods: {
       SendMsg() {
         if (this.text) {
           var time = new Date();
-          this.chatMsgs.push({
-            nickname:'sakuyo',
-            avatar:'',
+          var msg = {
+            uid:this.userInfo.uid,
+            nickname:this.userInfo.nickname,
+            avatar:this.userInfo.avatar,
             content:this.text,
-            time:time.toLocaleString(),
-            me:true
-          });
+            time:time.getTime()
+          }
+          this.$emit('send-msg', msg);
           this.text = '';
         }
       }
@@ -86,10 +69,18 @@
       chatMsgs: {
         handler (val) {
           val.sort((a,b) => {
-            let t1 = new Date(Date.parse(a.time.replace(/-/g, "/")))
-            let t2 = new Date(Date.parse(b.time.replace(/-/g, "/")))
+            let t1 = new Date(Date.parse(a.time))
+            let t2 = new Date(Date.parse(b.time))
             return t2.getTime() - t1.getTime()
           })
+          for (var i = val.length - 1; i >= 0; i--) {
+            if (val[i].uid == this.userInfo.uid) {
+              val[i].me = true;
+            }
+            else {
+              val[i].me = false;
+            }
+          }
           this.$nextTick(()=> {
             this.$refs['chatScrollbar'].wrap.scrollTop = this.$refs['chatScrollbar'].wrap.scrollHeight;
           })
