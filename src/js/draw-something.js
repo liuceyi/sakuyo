@@ -91,20 +91,32 @@ class DrawCanvas {
         );
         // Paint the line
         that.ctx.stroke();
-        that.wsDraw(that.path, false);
+        var pathTemp = JSON.parse(JSON.stringify(that.path));
+        pathTemp.beginX = pathTemp.beginX / that.canvas.width;
+        pathTemp.beginY = pathTemp.beginY / that.canvas.height;
+        pathTemp.endX = pathTemp.endX / that.canvas.width;
+        pathTemp.endY = pathTemp.endY / that.canvas.height;
+        // that.wsDraw(that.path, false);
+        that.wsDraw(pathTemp, false);
       }
     }
     this.canvas.onmouseup = () => {
       // Stop drawing
       that.isDrawing = false;
-      that.wsDraw(that.path, false, false);
-
+      var pathTemp = JSON.parse(JSON.stringify(that.path));
+      pathTemp.beginX = pathTemp.beginX / that.canvas.width;
+      pathTemp.beginY = pathTemp.beginY / that.canvas.height;
+      pathTemp.endX = pathTemp.endX / that.canvas.width;
+      pathTemp.endY = pathTemp.endY / that.canvas.height;
+      // that.wsDraw(that.path, false, false);
+      that.wsDraw(pathTemp, false, false);
       // Record the action
       this.saveImage();
       this.wsSetOrder('save');
     }
     this.canvas.onmouseleave = () => {
       that.isDrawing = false;
+      that.wsDraw('', false, false);
     }
   }
   cancel() {
@@ -229,8 +241,8 @@ class DrawCanvas {
       this.ctx.beginPath();
       // Set the start point
       this.ctx.moveTo(
-        path.beginX,
-        path.beginY
+        path.beginX * this.canvas.width,
+        path.beginY * this.canvas.height
       )
       this.wsDrawing = true;
       if (this.actionStage != null) {
@@ -240,8 +252,8 @@ class DrawCanvas {
     }
     
     this.ctx.lineTo(
-      path.endX,
-      path.endY
+      path.endX * this.canvas.width,
+      path.endY * this.canvas.height
     )
     this.ctx.stroke();
   }
