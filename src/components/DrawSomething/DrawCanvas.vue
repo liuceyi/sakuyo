@@ -1,7 +1,8 @@
 <template>
 <!-- 画布本体 宽高自适应 -->
+  
   <div :class="isStart?'canvas-container':'start-game-container'" id="canvas-container">
-
+    <DrawTimer v-if="isStart" :gameObj="gameObj"></DrawTimer>
     <canvas id="draw-canvas" :width="cvWidth" :height="cvHeight" v-show="isStart"></canvas>
 
     <div v-if="!isStart">
@@ -15,14 +16,19 @@
   </div>
 </template>
 <script>
+  import DrawTimer from '@/components/DrawSomething/DrawTimer.vue'
   export default {
     name:'DrawCanvas',
+    components: {
+      DrawTimer
+    },
     props: {
       isStart:Boolean,
       cvWidth:Number,
       cvHeight:Number,
       userList:Array,
-      roomId:String
+      roomId:String,
+      gameObj:Object
     },
     emits:['game-start', 'create-room', 'join-room'],
     methods: {
@@ -44,6 +50,7 @@
     height: 100%;
     border-radius: 5px;
     border: 1px solid #919191;
+    position: relative;
   }
 
   .start-game-container {

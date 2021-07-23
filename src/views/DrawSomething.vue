@@ -28,6 +28,7 @@
         :cvWidth="cvWidth"
         :cvHeight="cvHeight"
         :roomId="roomId"
+        :gameObj="gameObj"
         @game-start="GameStart"
         @create-room="CreateRoom"
         @join-room="JoinRoom"
@@ -63,7 +64,8 @@
     },
     provide() {
       return {
-        JoinRoom: this.JoinRoom
+        JoinRoom: this.JoinRoom,
+        SayReady: this.SayReady
       }
     },
     inject: ['Reload'],
@@ -85,7 +87,8 @@
         gameObj: {
           players: [],
           round: 0,
-          active: -1
+          active: -1,
+          round_end: null
         },
         word:''
       }
@@ -103,7 +106,7 @@
       ws.ws.reload = this.Reload;
       ws.start().then(()=>{
         setTimeout(()=>{
-          console.log('roomId:'+that.roomId);
+          console.log('roomId:' + that.roomId);
           if (that.roomId == 0) {
             that.$router.push('/draw-something');
           }
@@ -208,8 +211,8 @@
       },
       // First start or reconnect
       ActivateCanvas() {
-        this.cvWidth = document.getElementById("canvas-container").offsetWidth - 10;
-        this.cvHeight = document.getElementById("canvas-container").offsetHeight - 2;
+        this.cvWidth = document.getElementById("canvas-container").offsetWidth;
+        this.cvHeight = document.getElementById("canvas-container").offsetHeight;
         dc = new DrawCanvasJs('draw-canvas'); // Bind the element
         dc.wsDraw = function(content, isOrder=true, pathing=true){
           ws.sendDraw(content, isOrder, pathing);
@@ -278,6 +281,7 @@
         if (newVal) {
           ws.GameOrder(this.uid, 'game', this.roomId);
           this.ActivateCanvas();
+          this.SayReady();
         }
       }
     },
