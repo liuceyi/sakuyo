@@ -2,9 +2,20 @@
 <!-- 画布本体 宽高自适应 -->
   
   <div :class="isStart?'canvas-container':'start-game-container'" id="canvas-container">
-    <DrawTimer v-if="isStart" :gameObj="gameObj"></DrawTimer>
+    <DrawTimer 
+      v-if="isStart" 
+      :gameObj="gameObj" 
+      :readyToResult="readyToResult" 
+      @change-active="ChangeActive"
+      @show-word="ShowWord">
+    </DrawTimer>
+    <div v-show="readyToResult" class="show-word-container">
+      <span class="show-word">{{word}}</span>
+    </div>
     <canvas id="draw-canvas" :width="cvWidth" :height="cvHeight" v-show="isStart"></canvas>
-
+    <div v-if="isActive" class="word-container">
+      <span class="word">{{word}}</span>
+    </div>
     <div v-if="!isStart">
       <router-view 
       @game-start="GameStart"
@@ -24,13 +35,20 @@
     },
     props: {
       isStart:Boolean,
+      isActive:Boolean,
       cvWidth:Number,
       cvHeight:Number,
       userList:Array,
       roomId:String,
-      gameObj:Object
+      gameObj:Object,
+      word:String
     },
-    emits:['game-start', 'create-room', 'join-room'],
+    data() {
+      return {
+        readyToResult: false
+      }
+    },
+    emits:['game-start', 'create-room', 'join-room', 'change-active', 'get-word'],
     methods: {
       GameStart() {
         this.$emit('game-start');
@@ -40,6 +58,13 @@
       },
       JoinRoom(newRoomId) {
         this.$emit('join-room', newRoomId);
+      },
+      ShowWord(newVal) {
+        this.$emit('get-word');
+        this.readyToResult = newVal;
+      },
+      ChangeActive(newVal) {
+        this.$emit('change-active', newVal);
       }
     }
   }
@@ -51,6 +76,7 @@
     border-radius: 5px;
     border: 1px solid #919191;
     position: relative;
+    overflow: hidden;
   }
 
   .start-game-container {
@@ -122,5 +148,37 @@
     width: 100%;
     height: 100%;
     /*cursor:url("../assets/cursor.png"),auto;*/
+  }
+
+  .show-word-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .show-word {
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+  }
+
+  .word-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 20px;
+    border-top: 2px solid #919191;
+    border-left: 2px solid #919191;
+    padding: 5px;
+  }
+  .word {
+    color: black;
+    font-size: 15px;
+    font-weight: 500;
   }
 </style>

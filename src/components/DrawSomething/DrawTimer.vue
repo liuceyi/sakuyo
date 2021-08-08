@@ -1,6 +1,6 @@
 <template>
   <div class="timer-container">
-    <el-progress type="circle" :percentage="timeSet / 60 * 100" :stroke-width=8 :width=50 :status="timerStyle" v-show="showTimer">
+    <el-progress type="circle" :percentage="timeSet / timeMax * 100" :stroke-width=8 :width=50 :status="timerStyle" v-show="showTimer">
         <span class="left-time-span">{{ timeSet }}</span>
     </el-progress>
   </div>
@@ -9,17 +9,19 @@
   export default {
     name:'DrawTimer',
     props:{
-      gameObj:Object
+      gameObj:Object,
+      readyToResult: Boolean
     },
     data() {
       return {
         showTimer: false,
         timerStyle: 'success',
-        timeSet: 0
+        timeSet: 0,
+        timeMax: 60
       }
     },
-    inject:['gameObj', 'SayReady'],
-    emits:['create-room', 'join-room', 'game-start'],
+    inject:['SayReady'],
+    emits:['create-room', 'join-room', 'game-start', 'show-word', 'change-active'],
     methods: {
       StartTimer() {
         this.showTimer = true;
@@ -37,7 +39,14 @@
           if (this.timeSet === 0) {
             this.showTimer = false;
             this.timerStyle = 'success';
-            this.SayReady();
+            if (this.readyToResult) {
+              this.$emit('show-word', false);
+              this.SayReady();
+            }
+            else {
+              this.$emit('change-active', false);
+              this.$emit('show-word', true);
+            }
             clearInterval(this.timer);
           }
         }, 1000);
@@ -51,9 +60,19 @@
           var nowTime = new Date();
           var timeDiff = parseInt((endTime - nowTime)/1000);
           if (timeDiff > 0 && !this.showTimer) {
+            this.$emit('show-word', false);
             this.timeSet = timeDiff;
+            this.timeMax = 60;
             this.StartTimer();
           }
+        }
+      },
+      readyToResult(newVal) {
+        if (newVal) {
+          console.log('here');
+          this.timeSet = 10;
+          this.timeMax = 10;
+          this.StartTimer();
         }
       }
     }
@@ -66,6 +85,7 @@
     height: 50px;
     top: 3px;
     left: 3px;
+    z-index: 1000;
   }
   .left-time-span {
     font-size: 16px;

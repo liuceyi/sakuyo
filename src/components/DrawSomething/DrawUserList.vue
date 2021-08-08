@@ -4,11 +4,14 @@
     <el-col :span="4" class="drawing-user">
       <div class="drawing-user__span" v-show="index == drawingUser"></div>
     </el-col>
-    <el-col :span="20" class="user-content">
+    <el-col :span="18" class="user-content">
       <el-avatar :src="user.avatar" icon="el-icon-user-solid" class="user-content__avatar"/>
       <span class="user-content__name">{{user.nickname}}</span>
     </el-col>
-    {{user.score}}
+    <el-col :span="2">
+      <span>{{user.score}}</span>
+    </el-col>
+    
   </el-row>
 
 </template>

@@ -21,7 +21,6 @@
     methods: {
       BackToIndex() {
         this.$router.push('/draw-something/room');
-        this.JoinRoom(this.roomId);
       }
     },
     computed: {

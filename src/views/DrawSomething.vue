@@ -1,6 +1,6 @@
 <template>
-  <button @click="SayReady">ready</button>
-  <span>{{word}}</span>
+<!--   <button @click="SayReady">ready</button>
+  <span>{{word}}</span> -->
   <el-row :gutter="10" type="flex" class="main-container">
     <!-- 工具栏容器 宽度为2/24*100% -->
     <el-col :span="2" id="p5ToolBar" v-if="isActive&&isStart">
@@ -24,14 +24,18 @@
     <el-col :span="18" class="draw-canvas-container">
       <DrawCanvas
         :isStart="isStart"
+        :isActive="isActive"
         :userList="userList"
         :cvWidth="cvWidth"
         :cvHeight="cvHeight"
         :roomId="roomId"
         :gameObj="gameObj"
+        :word="word"
         @game-start="GameStart"
         @create-room="CreateRoom"
         @join-room="JoinRoom"
+        @change-active="ChangeActive"
+        @get-word="GetWord"
         v-loading="isLoading"></DrawCanvas>
     </el-col>
     <el-col :span="3" class="userlist-container" v-if="isStart">
@@ -193,8 +197,15 @@
             break;
           case 'check':
             //this.GetScore();
+            this.$notify({
+              title: '回答正确',
+              message: '分数+2',
+              position: 'bottom-left',
+              type: 'success'
+            });
             break;
           case 'ready':
+            this.word = '';
             this.isActive = false;
             break;
           case 'end':
@@ -227,9 +238,15 @@
       SayReady() {
         ws.GameOrder(this.uid, 'ready');
         dc.reset();
+        this.penColor = 'black';
+        this.lineWidth = 10;
+        this.eraserWidth = 30;
       },
-      TryAnswer() {
-        ws.GameOrder(this.uid, 'check', '123');
+      ChangeActive(newVal) {
+        this.isActive = newVal;
+      },
+      GetWord() {
+        ws.GameOrder(this.uid, 'word');
       }
     },
     watch: {
@@ -245,12 +262,11 @@
         dc.isActive = newVal;
         if (newVal) {
           dc.assign();
-          ws.GameOrder(this.uid, 'word');
+          ws.GameOrder(this.uid, 'new-word');
           console.log('ask word...');
         }
         else {
           dc.cancel();
-          this.word = '';
         }
       },
       roomId(newVal) {
