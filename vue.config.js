@@ -1,5 +1,8 @@
 const proxy = require('http-proxy-middleware');
 module.exports = {
+    configureWebpack: {
+        devtool: 'source-map'
+    },
     devServer : {
         hot: true,//自动保存
         open: true,//自动启动

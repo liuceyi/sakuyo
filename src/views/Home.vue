@@ -2,7 +2,7 @@
   <NavBar ref="NavBar" v-model:menuStatus="asideStatus" :isLogin="isLogin" :userInfo="userInfo" @change-login="ChangeLogin"></NavBar>
   <el-container style="height: 100%;">
     <Aside :asideStatus="asideStatus" :isLogin="isLogin"></Aside>
-    <el-main v-loading="isLoading">
+    <el-main v-loading="isLoading" style="padding:0;">
 
       <router-view :userInfo="userInfo" v-if="isRouterAlive"></router-view>
     

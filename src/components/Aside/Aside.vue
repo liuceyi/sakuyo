@@ -6,6 +6,9 @@
         <template #title>{{item.title}}</template><span></span><span></span><span></span><span></span>
       </el-menu-item>
     </el-menu>
+    <div v-show="!isLogin">
+      <span id='login-first'>请先登录</span>
+    </div>
   </el-aside>
   </transition>
 </template>
@@ -19,7 +22,8 @@
       return{
         navList: [
           {icon:'', title:'Sakuyo幻想', url:'/sakuyo-fantasy'},
-          {icon:'', title:'你画我猜', url:'/draw-something'}
+          {icon:'', title:'你画我猜', url:'/draw-something'},
+          {icon:'', title:'打砖块', url:'/'}
         ]
       }
     },
@@ -54,7 +58,7 @@
   }
   @keyframes aside-close {
     0% {width: 0px;}
-    100% {width: 180px;}
+    100% {transform: translateX(-180px);}
   }
   .aside-el-menu-item {
     position: relative;
@@ -128,5 +132,10 @@
       100% {
           bottom: 100%;
       }
+  }
+
+  #login-first {
+    text-align: center;
+    padding-top: 10px;
   }
 </style>

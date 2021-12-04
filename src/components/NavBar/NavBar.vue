@@ -23,7 +23,7 @@
               text-color="#fff"
               active-text-color="#ffd04b"
               router
-              unique-opened>
+              unique-opened  style="border:0">
               <el-menu-item index="/">首页</el-menu-item>
               <el-menu-item index="/msg">消息</el-menu-item>
               <el-menu-item index="/user" v-show="isLogin">个人中心</el-menu-item>
