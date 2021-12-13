@@ -12,7 +12,7 @@ const routes = [
       { path: '/msg', component:() => import('@/views/MsgPage.vue'), meta:{title:"sakuyo - 消息"}},
       { path: '/user', component:() => import('@/views/UserPage.vue'), meta:{title:"sakuyo - 个人中心"}},
       { path: '/sakuyo-fantasy', component:() => import('@/views/SakuyoFantasy.vue'), meta:{title:"sakuyo - 幻想"}},
-      // { path: '/break-brick', component:() => import('@/views/SakuyoFantasy.vue'), meta:{title:"sakuyo - 打砖块"}},
+      { path: '/true-or-false', component:() => import('@/views/TrueOrFalse.vue'), meta:{title:"sakuyo - True or False"}},
       { 
         path: '/draw-something', component:() => import('@/views/DrawSomething.vue'), meta:{title:"sakuyo - 你画我猜"},
         children:[

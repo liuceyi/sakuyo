@@ -9,7 +9,7 @@
 
 <script>
   // import ProgressBar from '@/components/ProgressBar.vue'
-  import P5 from 'p5'
+  // import P5 from 'p5'
   // let sketchIndexParticle = require('@/js/p5/sketch-index-particles')
   let sketchIndexLogo = require('@/js/p5/sketch-index-logo')
   export default {
@@ -23,7 +23,7 @@
       }
     },
     mounted() {
-      new P5(sketchIndexLogo())
+      new window.p5(sketchIndexLogo())
       // new P5(sketchIndexParticle())
       
     }

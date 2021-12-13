@@ -1,10 +1,10 @@
 <template>
-  <NavBar ref="NavBar" v-model:menuStatus="asideStatus" :isLogin="isLogin" :userInfo="userInfo" @change-login="ChangeLogin"></NavBar>
+  <NavBar ref="NavBar" v-model:menuStatus="asideStatus" :isLogin="isLogin" :toLogin="toLogin" :userInfo="userInfo" :indirect="indirect" @change-login="ChangeLogin" @change-to-login="ChangeToLogin"></NavBar>
   <el-container style="height: 100%;">
-    <Aside :asideStatus="asideStatus" :isLogin="isLogin"></Aside>
+    <Aside :asideStatus="asideStatus" :isLogin="isLogin" style="position:absolute; height:100%"></Aside>
     <el-main v-loading="isLoading" style="padding:0;">
 
-      <router-view :userInfo="userInfo" v-if="isRouterAlive"></router-view>
+      <router-view :userInfo="userInfo" @go-to-login="GoToLogin" v-if="isRouterAlive"></router-view>
     
     </el-main>
 
@@ -36,11 +36,13 @@ export default {
       asideStatus: false,
       isLoading: false,
       isLogin: false,
+      toLogin: false,
       userInfo:{
         uid:'',
         nickname:'',
         avatar:''
       },
+      indirect: false,
       isRouterAlive:true
     }
   },
@@ -116,6 +118,15 @@ export default {
     },
     ChangeLogin(val) {
       this.isLogin = val;
+    },
+    ChangeToLogin(val) {
+      this.toLogin = val;
+    },
+    GoToLogin() {
+      if (!this.isLogin) {
+        this.indirect = true;
+        this.toLogin = true;
+      }
     },
     Logout() {
       var that = this;

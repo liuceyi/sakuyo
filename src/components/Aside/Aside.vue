@@ -1,14 +1,14 @@
 <template>
   <transition name='aside'>
-  <el-aside width="180px" style="background-color: rgb(238, 241, 246)" v-show="asideStatus">
-    <el-menu router unique-opened active-text-color='white' v-show="isLogin">
+  <el-aside width="180px" style="background-color: rgb(238, 241, 246); z-index: 3000;" v-show="asideStatus">
+    <el-menu router unique-opened active-text-color='white'>
       <el-menu-item v-for="item in navList" :key="item.index" :index="item.url" class="aside-el-menu-item">
         <template #title>{{item.title}}</template><span></span><span></span><span></span><span></span>
       </el-menu-item>
     </el-menu>
-    <div v-show="!isLogin">
+    <!-- <div v-show="!isLogin">
       <span id='login-first'>请先登录</span>
-    </div>
+    </div> -->
   </el-aside>
   </transition>
 </template>
@@ -23,7 +23,7 @@
         navList: [
           {icon:'', title:'Sakuyo幻想', url:'/sakuyo-fantasy'},
           {icon:'', title:'你画我猜', url:'/draw-something'},
-          {icon:'', title:'打砖块', url:'/'}
+          {icon:'', title:'True or False', url:'/true-or-false'}
         ]
       }
     },
@@ -50,15 +50,15 @@
     animation: aside-open 0.6s;
   }
   @keyframes aside-open {
-    0% {width: 180px;}
-    100% {width: 0px;}
+    0% {transform: translateX(0px);}
+    100% {transform: translateX(-180px);}
   }
   .aside-enter-active {
     animation: aside-close 0.6s;
   }
   @keyframes aside-close {
-    0% {width: 0px;}
-    100% {transform: translateX(-180px);}
+    0% {transform: translateX(-180px);}
+    100% {transform: translateX(0px);}
   }
   .aside-el-menu-item {
     position: relative;
@@ -135,7 +135,10 @@
   }
 
   #login-first {
+    display: flex;
+    flex-direction: column;
     text-align: center;
     padding-top: 10px;
+    cursor: default;
   }
 </style>

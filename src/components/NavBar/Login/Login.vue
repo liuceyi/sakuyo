@@ -2,6 +2,9 @@
   <el-dialog
     :model-value="toLogin"
     @close="CloseDialog"
+    :close-on-click-modal="!indirect"
+    :close-on-press-escape="false"
+    :show-close="!indirect"
     width="30%" 
     class="dialog-container">
     <template #title><span style="color: white; font-size: 16px;">{{isRegistered?'登录':'注册'}}</span></template>
@@ -34,13 +37,14 @@ import RegisterCard from '@/components/NavBar/Login/RegisterCard.vue'
 export default {
   name: 'Login',
   props: {
-    toLogin:Boolean
+    toLogin:Boolean,
+    indirect:Boolean
   },
   components: {
     LoginCard,
     RegisterCard
   },
-  emits: ['update:toLogin', 'login-status'],
+  emits: ['change-to-login', 'login-status'],
   data(){
     return{
       isRegistered: true,
@@ -50,7 +54,7 @@ export default {
   },
   methods: {
     CloseDialog(){
-      this.$emit('update:toLogin', false);
+      this.$emit('change-to-login', false);
     },
     GetLoginError(val) {
       this.showError = val;
@@ -58,6 +62,11 @@ export default {
     },
     GetLoginStatus(val) {
       this.$emit('login-status', val);
+    }
+  },
+  watch: {
+    $route() {
+      this.$emit('change-to-login', false);
     }
   }
 }

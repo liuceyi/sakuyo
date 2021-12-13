@@ -18,7 +18,6 @@
             <el-menu
               :default-active="defaultActive"
               mode="horizontal"
-              @select="HandleSelect"
               background-color="transparent"
               text-color="#fff"
               active-text-color="#ffd04b"
@@ -59,7 +58,7 @@
     </el-header>
 
   </el-container>
-  <Login v-model="toLogin" @login-status="GetLoginStatus"></Login>
+  <Login :toLogin="toLogin" :indirect="indirect" @change-to-login="ChangeToLogin" @login-status="GetLoginStatus"></Login>
 </template>
 <script>
   import Login from '@/components/NavBar/Login/Login.vue'
@@ -67,15 +66,17 @@
     props: {
       menuStatus:Boolean,
       isLogin:Boolean,
-      userInfo:Object
+      toLogin:Boolean,
+      userInfo:Object,
+      indirect:Boolean
     },
-    emits:["update:menuStatus", "change-login"],
+    emits:["update:menuStatus", "change-to-login", "change-login"],
     components: {
       Login
     },
     data(){
       return{
-        toLogin: false,
+        // toLogin: false,
         defaultActive: '/'
       }
     },
@@ -85,20 +86,20 @@
     methods:{
       ClickMenu(){
         // this.menuStatus = !this.menuStatus
-        this.$emit("update:menuStatus", !this.menuStatus)
+        this.$emit("update:menuStatus", !this.menuStatus);
       },
       ClickLogin(){
-        this.toLogin = true;
+        this.ChangeToLogin(true);
       },
       ClickLogout() {
         this.$emit("change-login", false);
       },
-      HandleSelect(key, keyPath){
-        console.log(key, keyPath);
+      ChangeToLogin(val) {
+        this.$emit("change-to-login", val);
       },
       GetLoginStatus(val) {
         this.$emit("change-login", val);
-        this.toLogin = false;
+        this.ChangeToLogin(false);
       },
       SetCurrentRoute() {
         this.defaultActive = this.$route.path;
@@ -117,6 +118,7 @@
     padding: 0;
     background-image: linear-gradient(to top right,#8A2BE2 ,#4A00E0);
     color: #F2F6FC;
+    z-index: 3000;
   }
   .header-row {
     width: 100%;

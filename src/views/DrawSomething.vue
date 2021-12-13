@@ -59,7 +59,10 @@
   let ws;
   export default {
     name:'DrawSomething',
-    emits:['game-start', 'create-room', 'join-room'],
+    emits:['go-to-login', 'game-start', 'create-room', 'join-room'],
+    props:{
+      toLogin:Boolean
+    },
     components: {
       DrawToolBar,
       DrawUserList,
@@ -98,9 +101,16 @@
       }
     },
     mounted() {
-      this.isLoading = true;
       var that = this;
       var cookie = this.cookie.GetCookie();
+      if (cookie == "") {
+        // Go To Login
+        
+        that.$emit("go-to-login", true);
+        // console.log(that.toLogin);
+        return
+      }
+      this.isLoading = true;
       ws = new DrawWs('www.sakuyo.cn', '9998', cookie);
       ws.ws.handleMsg = this.HandleChat;
       ws.ws.handleUserList = this.HandleUserList;
