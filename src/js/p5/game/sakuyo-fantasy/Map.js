@@ -32,11 +32,13 @@ class Map {
   }
 
   build() {
-    this.wallList.push(new Wall(self.p5.width/2, self.p5.height/2, self.p5.width, 10));
+    this.wallList.push(new Wall(self.p5.width/2, self.p5.height/2 + 100, self.p5.width, 100));
 
     this.wallList.push(new Wall(100, self.p5.height/2 - 100, 100, 10));
 
-    this.wallList.push(new Wall(self.p5.width - 500, self.p5.height/2 - 10, 100, 50));
+    this.wallList.push(new Wall(self.p5.width - 500, self.p5.height/2, 100, 50));
+
+    this.wallList.push(new Wall(self.p5.width - 800, self.p5.height/2 - 100, 100, 10));
   }
 
   draw() {

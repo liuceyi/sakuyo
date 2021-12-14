@@ -83,8 +83,8 @@ class System {
 
   gameInit() {
     this.map = new Map(self.p5.width, self.p5.height);
-    this.player = new Player(self.p5.width/2, self.p5.height/2, 'a', self.p5.color(100, 100, 100), '1P');
-    this.enemy = new AI(100, self.p5.height/2, 'b', self.p5.color(10, 10, 10), 'AI');
+    this.player = new Player(self.p5.width/2, self.p5.height/2 - 100, 'a', self.p5.color(100, 100, 100), '1P');
+    this.enemy = new AI(100, self.p5.height/2 - 100, 'b', self.p5.color(10, 10, 10), 'AI');
     this.enemy.initSpeed = 0;
     this.teamList = {a:[this.player], b:[this.enemy]};
     this.currentKeyInput = new KeyInput();

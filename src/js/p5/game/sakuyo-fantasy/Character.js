@@ -22,7 +22,7 @@ class Character{
     this.team = team;
     this.pos = {x:x, y:y};
     this.speed = this.initSpeed;
-    this.jumpSpeed = this.initJumpSpeed;
+    this.jumpSpeed = 0;
     this.gravity = this.initGravity;
     this.hp = this.hpMax;
     this.label = label;
@@ -81,8 +81,6 @@ class Character{
   }
 
   moveBlock() {
-    this.collide.x = this.pos.x;
-    this.collide.y = this.pos.y;
     this.collide.isHit(this.pos.x, this.pos.y);
   }
 
@@ -116,7 +114,7 @@ class Character{
 
   moveDrop() {
     if(!this.block.bottom) {
-      if (this.block.top) {
+      if (this.block.top && this.jumpSpeed > 0) {
         console.log('head');
         this.jumpSpeed = 0;
       }
