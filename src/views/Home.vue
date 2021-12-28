@@ -2,7 +2,7 @@
   <NavBar ref="NavBar" v-model:menuStatus="asideStatus" :isLogin="isLogin" :toLogin="toLogin" :userInfo="userInfo" :indirect="indirect" @change-login="ChangeLogin" @change-to-login="ChangeToLogin"></NavBar>
   <el-container style="height: 100%;">
     <Aside :asideStatus="asideStatus" :isLogin="isLogin" style="position:absolute; height:100%"></Aside>
-    <el-main v-loading="isLoading" style="padding:0;">
+    <el-main v-loading="isLoading" class="main">
 
       <router-view :userInfo="userInfo" @go-to-login="GoToLogin" v-if="isRouterAlive"></router-view>
     
@@ -157,5 +157,8 @@ export default {
 }
 </script>
 <style scoped>
-
+  .main {
+    padding: 0;
+    position: relative;
+  }
 </style>

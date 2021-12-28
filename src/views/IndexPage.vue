@@ -23,9 +23,18 @@
       }
     },
     mounted() {
-      new window.p5(sketchIndexLogo())
-      // new P5(sketchIndexParticle())
+      try {
+        new window.p5(sketchIndexLogo);
+      } catch (error) {
+        console.log(error);
+        new window.p5.constructor(sketchIndexLogo);
+      }
       
+    },
+    watch: {
+      $route() {
+        document.querySelector('#p5Sketch-logo').noLoop = true;
+      }
     }
   }
 </script>

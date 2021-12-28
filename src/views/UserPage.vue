@@ -167,8 +167,10 @@
 
 <style scoped>
   .user-card-container {
+    height: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
   .user-card {
     width: 50%;

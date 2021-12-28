@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 2650169 */
-  src: url('iconfont.woff2?t=1625461761812') format('woff2'),
-       url('iconfont.woff?t=1625461761812') format('woff'),
-       url('iconfont.ttf?t=1625461761812') format('truetype');
+  font-family: "iconfont"; /* Project id 3043901 */
+  src: url('iconfont.woff2?t=1640093316294') format('woff2'),
+       url('iconfont.woff?t=1640093316294') format('woff'),
+       url('iconfont.ttf?t=1640093316294') format('truetype');
 }
 
 .iconfont {
@@ -11,19 +11,30 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-
-
-[class^="el-icon-more"], [class*=" el-icon-more"] {
-  font-family:"iconfont" !important;
-  /* 以下内容参照第三方图标库本身的规则 */
-  font-size: 18px;
-  font-style:normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  align-items: center;
 }
 
 .el-icon-more_xiangpica:before {
-  content: "\e609";
+  content: "\e6ed";
+}
+
+.el-icon-more_discuss:before {
+  content: "\e63a";
+}
+
+.el-icon-more_ellipsis:before {
+  content: "\e701";
+}
+
+.el-icon-more_screenshot:before {
+  content: "\e611";
+}
+
+.el-icon-more_document:before {
+  content: "\ec17";
+}
+
+.el-icon-more_emoji:before {
+  content: "\e6f6";
 }

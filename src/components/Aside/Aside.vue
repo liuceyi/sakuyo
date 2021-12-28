@@ -23,7 +23,8 @@
         navList: [
           {icon:'', title:'Sakuyo幻想', url:'/sakuyo-fantasy'},
           {icon:'', title:'你画我猜', url:'/draw-something'},
-          {icon:'', title:'True or False', url:'/true-or-false'}
+          {icon:'', title:'True or False', url:'/true-or-false'},
+          {icon:'', title:'MihoSaku聊天室', url:'/chat'}
         ]
       }
     },
@@ -33,16 +34,16 @@
   }
 </script>
 <style scoped>
-  /deep/ .el-menu {
+  >>> .el-menu {
     background-color: transparent;
   }
-  /deep/ .el-menu-item {
+  >>> .el-menu-item {
     color: white;
     background-image: linear-gradient(to right, #4e54c8, #8f94fb);
     background-position: center;
     border-bottom: 1px solid #9FB6CD;
   }
-  /deep/ .el-menu-item:hover, .el-menu-item:focus {
+  >>> .el-menu-item:hover, .el-menu-item:focus {
     color: white;
     background-image: linear-gradient(to bottom right,#373B44 ,#4286f4);
   }

@@ -22,7 +22,8 @@
     mounted() {
       try {
         new window.p5(sketch);
-      } catch (error) {
+      } 
+      catch (error) {
         new window.p5.constructor(sketch);
       }
       
