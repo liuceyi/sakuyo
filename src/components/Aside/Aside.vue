@@ -21,6 +21,7 @@
     data(){
       return{
         navList: [
+          {icon:'', title:'FF14', url:'/ff14'},
           {icon:'', title:'Sakuyo幻想', url:'/sakuyo-fantasy'},
           {icon:'', title:'你画我猜', url:'/draw-something'},
           {icon:'', title:'True or False', url:'/true-or-false'},

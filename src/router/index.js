@@ -21,7 +21,8 @@ const routes = [
           { path: '/draw-something/room', component:() => import('@/components/DrawSomething/DrawRoom.vue'), meta:{title:"sakuyo - 你画我猜：房间"}},
           { path: '/draw-something/result', component:() => import('@/components/DrawSomething/DrawResult.vue'), meta:{title:"sakuyo - 你画我猜"}}
         ]
-      }
+      },
+      { path: '/ff14', component:() => import('@/views/FF14Page.vue'), meta:{title:"sakuyo - FF14"}},
     ],
   }
 ];
