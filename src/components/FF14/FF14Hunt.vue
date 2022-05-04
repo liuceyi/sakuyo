@@ -37,7 +37,6 @@
             that.formatTimeData[i].format_time[j] = that.FormatTimeToHM(that.formatTimeData[i].format_time[j]);
           }
         }
-        console.log(that.formatTimeData);
       });
     },
     methods: {
@@ -69,7 +68,8 @@
       GetTimeDiff(t) {
         let val = t.getTime();
         let currentTime = new Date().getTime();
-        return val >= currentTime ? val - currentTime : val + 24 * 60 * 60 * 1000 - currentTime;
+        let timeDiff = val >= currentTime ? val - currentTime : val + 24 * 60 * 60 * 1000 - currentTime;
+        return timeDiff;
       },
       FormatTimeToHM(time_raw) {
         let h = time_raw.getHours();
@@ -84,19 +84,18 @@
           let aDiff;
           let bDiff;
           
-          a.format_time.sort(function(a, b) {
-            let aVal = that.GetTimeDiff(a);
-            let bVal = that.GetTimeDiff(b);
+          a.format_time.sort(function(aa, ab) {
+            let aVal = that.GetTimeDiff(aa);
+            let bVal = that.GetTimeDiff(ab);
             return aVal - bVal;
           });
-          b.format_time.sort(function(a, b) {
-            let aVal = that.GetTimeDiff(a);
-            let bVal = that.GetTimeDiff(b);
+          b.format_time.sort(function(ba, bb) {
+            let aVal = that.GetTimeDiff(ba);
+            let bVal = that.GetTimeDiff(bb);
             return aVal - bVal;
           });
           aDiff = a.format_time[0];
           bDiff = b.format_time[0];
-          
           return aDiff - bDiff;
         }
       },
@@ -121,8 +120,9 @@
             let huntTimeFormat = this.UTCToLocalTimeString(new Date()); // 获取当前北京时间
             huntTimeFormat.setHours(parseInt(huntTimeArr[0]));
             huntTimeFormat.setMinutes(parseInt(huntTimeArr[1]));
-            huntTimeFormat = new Date(huntTimeFormat.getTime() - timeOffset * 60 * 60 * 1000);
-            huntTrain.format_time.push(huntTimeFormat);
+            huntTimeFormat = huntTimeFormat.getTime() - timeOffset * 60 * 60 * 1000;
+            if (huntTimeFormat < new Date().getTime()) huntTimeFormat += 24 * 60 * 60 * 1000;
+            huntTrain.format_time.push(new Date(huntTimeFormat));
           }
         }
         return huntTrains;
