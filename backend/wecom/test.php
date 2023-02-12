@@ -10,11 +10,15 @@
 
 require_once './scraper.php';
 
+require_once './distributor.php';
+$dis = new Distributor();
 
-$scraper = new Scraper();
-
-$scraper->get_newest_tele();
-
-
+$send_room_list = $dis->distribute(['content' => "test fdafhsadjkfh afdajhadklf ", "images" => []]);
+$rooms = [];
+foreach ($send_room_list as $room) 
+{
+    $rooms[] = $room['name'];
+}
+print_r($rooms);
 
 ?>

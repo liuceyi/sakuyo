@@ -43,7 +43,7 @@ class Scraper
         ]);
     }
 
-    function get_newest_tele()
+    function get_newest_tele($target_time=null)
     {
         $url = "https://www.cls.cn/nodeapi/updateTelegraphList";
 
@@ -51,7 +51,7 @@ class Scraper
             'app' => 'CailianpressWeb',
             'category' => '',
             'hasFirstVipArticle' => 1,
-            'lastTime' => $this->current_time,
+            'lastTime' => $target_time == null ? $this->current_time : $target_time,
             'os' => 'web',
             'rn' => 20,
             'subscribedColumnIds' => '',
@@ -97,7 +97,11 @@ class Scraper
                 'title' => $title,
                 'content' => $content
             ));
-            return $this->format_content($content);
+            $news = array(
+                'content' => $this->format_content($content),
+                'images' => $newest_data['images']
+            );
+            return $news;
         }
 
         else {

@@ -23,6 +23,7 @@ const routes = [
         ]
       },
       { path: '/ff14', component:() => import('@/views/FF14Page.vue'), meta:{title:"sakuyo - FF14"}},
+      { path: '/insta', component:() => import('@/views/Insta360.vue'), meta:{title:"mihoko - Insta360"}},
     ],
   }
 ];

@@ -25,7 +25,8 @@
           {icon:'', title:'Sakuyo幻想', url:'/sakuyo-fantasy'},
           {icon:'', title:'你画我猜', url:'/draw-something'},
           {icon:'', title:'True or False', url:'/true-or-false'},
-          {icon:'', title:'MihoSaku聊天室', url:'/chat'}
+          {icon:'', title:'MihoSaku聊天室', url:'/chat'},
+          {icon:'', title:'Insta360', url:'/insta'}
         ]
       }
     },
