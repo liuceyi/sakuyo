@@ -7,7 +7,7 @@
       <router-view :userInfo="userInfo" @go-to-login="GoToLogin" v-if="isRouterAlive"></router-view>
     
     </el-main>
-
+    <MusicPlayer class="music-player"></MusicPlayer>
   </el-container>
   <FootPage ref='FootPage'></FootPage>
   
@@ -17,7 +17,7 @@
 import NavBar from '@/components/NavBar/NavBar.vue'
 import Aside from '@/components/Aside/Aside.vue'
 import FootPage from '@/components/FootPage/FootPage.vue'
-
+import MusicPlayer from '@/components/MusicPlayer/MusicPlayer.vue'
 export default {
   name: 'Home',
   provide() {
@@ -29,7 +29,8 @@ export default {
   components: {
     NavBar,
     Aside,
-    FootPage
+    FootPage,
+    MusicPlayer
   },
   data() {
     return{
@@ -160,5 +161,9 @@ export default {
   .main {
     padding: 0;
     position: relative;
+  }
+
+  .music-player {
+    position: absolute;
   }
 </style>

@@ -22,7 +22,7 @@ const sketch = (p5) => {
     container = document.querySelector('#p5Sketch-logo');
     let logoCnv = p5.createCanvas(container.offsetWidth, container.offsetHeight);
     logoCnv.parent("#p5Sketch-logo");
-    p5.frameRate(30);
+    p5.frameRate(10);
     // Font's Setup
     
     vmin = (p5.width < p5.height) ? p5.width : p5.height;

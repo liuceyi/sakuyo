@@ -11,6 +11,7 @@ import "element-plus/lib/theme-chalk/index.css";
 import ElementPlus from 'element-plus';
 import './assets/icon/iconfont.css'
 import locale from "element-plus/lib/locale/lang/zh-cn";
+
 const app = createApp(App);
 installElementPlus(app);
 app.use(ElementPlus, {locale});
@@ -21,7 +22,6 @@ app.config.globalProperties.api = '';
 app.config.globalProperties.axios = axios;
 app.config.globalProperties.qs = qs;
 app.config.globalProperties.cookie = cookie;
-
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = '/backend/api/api.php';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';

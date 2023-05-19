@@ -112,7 +112,7 @@
       }
     },
     mounted() {
-      this.wsRun();
+      // this.wsRun();
     },
     methods: {
       wsRun() {
@@ -153,21 +153,38 @@
           default:
             break;
         }
-        
-
       },
-      async filterData() {
-        let msg = {
+
+      // async filterData() {
+      //   let msg = {
+      //     'type': 'filter', 
+      //     'content': {
+      //       // 'section': 14,
+      //       'time': JSON.parse(JSON.stringify(this.timeRange))
+      //     }};
+      //   this.ws.send(JSON.stringify(msg));
+      //   this.searching = true;
+      // }
+
+      // 获取数据
+      filterData() {
+        let that = this;
+        let data = {
           'type': 'filter', 
-          'content': {
-            // 'section': 14,
-            'time': JSON.parse(JSON.stringify(this.timeRange))
-          }};
-        this.ws.send(JSON.stringify(msg));
-        this.searching = true;
+          'startTime': JSON.parse(JSON.stringify(this.timeRange[0])),
+          'endTime': JSON.parse(JSON.stringify(this.timeRange[1])),
+        };
+        this.axios.post('http://sakuyo.cn:4369', that.qs.stringify(data)).then(res=>{
+          console.log(res.data);
+          if (res.data.status == 'Success') {
+            console.log('success');
+          }
+        })
       }
+
       
     },
+
     watch: {
 
     }

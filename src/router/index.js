@@ -11,7 +11,7 @@ const routes = [
       { path: '/', component: IndexPage, meta:{title:"sakuyo - 首页"}},
       { path: '/msg', component:() => import('@/views/MsgPage.vue'), meta:{title:"sakuyo - 消息"}},
       { path: '/user', component:() => import('@/views/UserPage.vue'), meta:{title:"sakuyo - 个人中心"}},
-      { path: '/sakuyo-fantasy', component:() => import('@/views/SakuyoFantasy.vue'), meta:{title:"sakuyo - 幻想"}},
+      // { path: '/sakuyo-fantasy', component:() => import('@/views/SakuyoFantasy.vue'), meta:{title:"sakuyo - 幻想"}},
       { path: '/true-or-false', component:() => import('@/views/TrueOrFalse.vue'), meta:{title:"sakuyo - True or False"}},
       { path: '/chat', component:() => import('@/views/ChatRoom.vue'), meta:{title:"sakuyo - Chat"}},
       { 

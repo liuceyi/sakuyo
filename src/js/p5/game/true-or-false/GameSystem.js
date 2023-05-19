@@ -1,6 +1,6 @@
-const {ClassicQuestion, InputQuestion} = require('./Question.js');
-const KeyInput = require('./KeyInput.js');
-const GameUI = require('./GameUI.js');
+import { ClassicQuestion, InputQuestion } from './Question.js';
+import KeyInput from './KeyInput.js';
+import GameUI from './GameUI.js';
 class System {
   paused = false;
   gameOver = false;
@@ -69,4 +69,4 @@ class System {
   }
 }
 
-module.exports = System;
+export default System;

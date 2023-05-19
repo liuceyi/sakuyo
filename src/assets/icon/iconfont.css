@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3043901 */
-  src: url('iconfont.woff2?t=1640093316294') format('woff2'),
-       url('iconfont.woff?t=1640093316294') format('woff'),
-       url('iconfont.ttf?t=1640093316294') format('truetype');
+  src: url('iconfont.woff2?t=1684499873439') format('woff2'),
+       url('iconfont.woff?t=1684499873439') format('woff'),
+       url('iconfont.ttf?t=1684499873439') format('truetype');
 }
 
 .iconfont {
@@ -11,30 +11,65 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  align-items: center;
 }
 
-.el-icon-more_xiangpica:before {
-  content: "\e6ed";
+.el-icon-more-collapse:before {
+  content: "\e63c";
 }
 
-.el-icon-more_discuss:before {
-  content: "\e63a";
+.el-icon-more-expand:before {
+  content: "\e60b";
 }
 
-.el-icon-more_ellipsis:before {
-  content: "\e701";
+.el-icon-morevolume-off:before {
+  content: "\eca9";
 }
 
-.el-icon-more_screenshot:before {
+.el-icon-morevolumehigh:before {
+  content: "\e708";
+}
+
+.el-icon-morevolumemedium:before {
+  content: "\e709";
+}
+
+.el-icon-morevolumelow:before {
+  content: "\e70a";
+}
+
+.el-icon-more24gf-play:before {
+  content: "\ea82";
+}
+
+.el-icon-morezanting:before {
+  content: "\e63b";
+}
+
+.el-icon-morebofang-suijibofang:before {
+  content: "\e68c";
+}
+
+.el-icon-moreScreenshot:before {
   content: "\e611";
 }
 
-.el-icon-more_document:before {
+.el-icon-morewenjianjia:before {
   content: "\ec17";
 }
 
-.el-icon-more_emoji:before {
+.el-icon-moreemoji:before {
   content: "\e6f6";
 }
+
+.el-icon-moreellipsis2:before {
+  content: "\e701";
+}
+
+.el-icon-morexiangpica:before {
+  content: "\e6ed";
+}
+
+.el-icon-morediscuss:before {
+  content: "\e63a";
+}
+

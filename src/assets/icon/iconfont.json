@@ -6,6 +6,69 @@
   "description": "sakuyo website",
   "glyphs": [
     {
+      "icon_id": "24848478",
+      "name": "收起",
+      "font_class": "-collapse",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "1256486",
+      "name": "展开",
+      "font_class": "-expand",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "6776437",
+      "name": "声音静音",
+      "font_class": "volume-off",
+      "unicode": "eca9",
+      "unicode_decimal": 60585
+    },
+    {
+      "icon_id": "10014312",
+      "name": "高音量",
+      "font_class": "volumehigh",
+      "unicode": "e708",
+      "unicode_decimal": 59144
+    },
+    {
+      "icon_id": "10014314",
+      "name": "中音量",
+      "font_class": "volumemedium",
+      "unicode": "e709",
+      "unicode_decimal": 59145
+    },
+    {
+      "icon_id": "10014316",
+      "name": "低音量",
+      "font_class": "volumelow",
+      "unicode": "e70a",
+      "unicode_decimal": 59146
+    },
+    {
+      "icon_id": "7594155",
+      "name": "24gf-play",
+      "font_class": "24gf-play",
+      "unicode": "ea82",
+      "unicode_decimal": 60034
+    },
+    {
+      "icon_id": "8341782",
+      "name": "暂停",
+      "font_class": "zanting",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "24267234",
+      "name": "播放-随机播放",
+      "font_class": "bofang-suijibofang",
+      "unicode": "e68c",
+      "unicode_decimal": 59020
+    },
+    {
       "icon_id": "1336094",
       "name": "Screenshot ",
       "font_class": "Screenshot",
